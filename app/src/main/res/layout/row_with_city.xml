@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:paddingEnd="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingStart="16dp"
+    android:background="@color/whiteColor">
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:ellipsize="end"
+        android:textColor="@color/textColor"
+        tools:text="Санкт-Петербург"
+        android:textSize="20sp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:id="@+id/cityText"/>
+
+
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:ellipsize="end"
+        android:textColor="@color/textColor"
+        tools:text="+21"
+        android:textSize="31sp"
+        android:id="@+id/currentWeather"
+        android:layout_gravity="center_vertical"/>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:src="@drawable/w01d"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/weatherIcon"/>
+
+</LinearLayout>
+
