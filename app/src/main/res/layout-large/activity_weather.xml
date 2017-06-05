@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/cardsBack"
+    android:id="@+id/mainLayout"
+    android:orientation="horizontal">
+    <ProgressBar
+        android:id="@+id/loadProgress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <TextView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:id="@+id/emptyView"
+        android:background="@color/cardsBack"
+        android:visibility="gone"
+        android:textColor="@color/textColor"
+        android:text="@string/emptyDataString"/>
+    <fragment
+        class="com.example.pavelsuvit.weatherapplication.fragments.ListWeatherFragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:id="@+id/list_fragment_view"/>
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/detailed_fragment"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            android:background="@null"
+            app:fabSize="normal"
+            android:layout_margin="18dp"
+            app:elevation="10dp"
+            android:id="@+id/fab"
+            android:layout_gravity="bottom|right"
+            app:layout_anchor="@id/detailed_fragment"
+            app:layout_anchorGravity="bottom|right|end"
+            />
+    </FrameLayout>
+</LinearLayout>

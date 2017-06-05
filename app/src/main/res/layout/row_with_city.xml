@@ -1,47 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:paddingEnd="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingStart="16dp"
-    android:background="@color/whiteColor">
+    android:layout_height="wrap_content"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false"
+    android:layout_marginLeft="5dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginRight="5dp">
 
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:ellipsize="end"
-        android:textColor="@color/textColor"
-        tools:text="Санкт-Петербург"
-        android:textSize="20sp"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:id="@+id/cityText"/>
-
-
-
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:ellipsize="end"
-        android:textColor="@color/textColor"
-        tools:text="+21"
-        android:textSize="31sp"
-        android:id="@+id/currentWeather"
-        android:layout_gravity="center_vertical"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:background="@color/whiteColor">
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:src="@drawable/w01d"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/weatherIcon"/>
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/textColor"
+                tools:text="Санкт-Петербург"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:id="@+id/cityText"/>
 
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_gravity="center_vertical">
+                <TextView
+                    android:id="@+id/weatherDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:textSize="12sp"
+                    android:textColor="@color/mildData"
+                    tools:text="Mar 6, 2014"
+                    />
+                <TextView
+                    android:id="@+id/weatherTime"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mildData"
+                    android:textSize="12sp"
+                    tools:text="11:45 PM"/>
 
+            </LinearLayout>
+
+
+
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:ellipsize="end"
+                android:textColor="@color/textColor"
+                android:minEms="1"
+                tools:text="+21"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:id="@+id/currentWeather"
+                android:layout_gravity="center_vertical"
+                android:gravity="end"
+                android:textAlignment="textEnd"/>
+
+
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/w01d"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/weatherIcon"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>

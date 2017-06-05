@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="whiteColor">#FFFFFF</color>
     <color name="textColor">#000000</color>
+    <color name="mildData">#B4BAC0</color>
+    <color name="cardsBack">#F0F0F0</color>
 </resources>

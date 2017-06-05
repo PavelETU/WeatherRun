@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Weather Application</string>
+    <string name="app_name">Weather Run</string>
+    <string name="search_hint">Search city</string>
+    <string name="pressure">Pressure: %d, hPa</string>
+    <string name="humidity">Humidity: %d%%</string>
+    <string name="wind">Wind speed: %d, meter/sec</string>
+    <string name="emptyDataString">There is no data available. \nPlease, check your internet connection.</string>
 </resources>

@@ -1,38 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:background="@color/whiteColor">
+    <ProgressBar
+        android:id="@+id/loadProgress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <TextView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:id="@+id/emptyView"
+        android:background="@color/cardsBack"
+        android:visibility="gone"
+        android:textColor="@color/textColor"
+        android:text="@string/emptyDataString"/>
     <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+    <fragment
+        class="com.example.pavelsuvit.weatherapplication.fragments.ListWeatherFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list_fragment_view"/>
 
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/cities"
-            android:orientation="vertical"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:textColor="@color/textColor"/>
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_white_24dp"
-            android:background="@null"
-            app:fabSize="normal"
-            android:layout_margin="18dp"
-            app:elevation="10dp"
-            android:id="@+id/fab"
-            app:layout_anchor="@id/cities"
-            app:layout_anchorGravity="bottom|right|end"
-            app:layout_behavior="com.example.pavelsuvit.weatherapplication.ScrollAware"/>
-        <!--android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"-->
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_white_24dp"
+        android:background="@null"
+        app:fabSize="normal"
+        android:layout_margin="18dp"
+        app:elevation="10dp"
+        android:id="@+id/fab"
+        app:layout_anchor="@id/list_fragment_view"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior="com.example.pavelsuvit.weatherapplication.utils.ScrollAware"/>
     </android.support.design.widget.CoordinatorLayout>
-</RelativeLayout>
+</LinearLayout>

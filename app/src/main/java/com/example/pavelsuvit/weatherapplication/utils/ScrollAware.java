@@ -1,16 +1,11 @@
-package com.example.pavelsuvit.weatherapplication;
+package com.example.pavelsuvit.weatherapplication.utils;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-
-/**
- * Created by pavel.suvit on 19.04.2017.
- */
 
 public class ScrollAware extends FloatingActionButton.Behavior {
 
