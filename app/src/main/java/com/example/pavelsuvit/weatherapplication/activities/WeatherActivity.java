@@ -5,13 +5,10 @@ import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
-import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
 import com.example.pavelsuvit.weatherapplication.fragments.DetailedFragment;
@@ -19,15 +16,6 @@ import com.example.pavelsuvit.weatherapplication.fragments.ListWeatherFragment;
 import com.example.pavelsuvit.weatherapplication.R;
 import com.example.pavelsuvit.weatherapplication.utils.LoadCitiesToDatabaseTask;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WeatherActivity extends AppCompatActivity
         implements ListWeatherFragment.ItemDeletedFromList,

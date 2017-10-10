@@ -12,9 +12,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -45,6 +49,7 @@ public class ListWeatherFragment extends Fragment
     private static final int LOAD_FROM_INTERNET_LOADER_ID = 1;
     private static final int SAVE_TO_DB_LOADER_ID = 2;
     private static final int LOAD_FROM_DB_LOADER_ID = 3;
+    private static final int SAVE_TO_DB_DURING_PAUSE_LOADER_ID = 4;
     private static final String URL_WEATHER = "http://api.openweathermap.org/data/2.5/group?id=";
     private static final String URL_PART_WITH_KEY = "&APPID=6b8bc04abc1a38d4dbcc15a8f833ff69";
     private WeatherRecyclerAdapter adapter;
@@ -54,7 +59,13 @@ public class ListWeatherFragment extends Fragment
             new LoaderManager.LoaderCallbacks<Boolean>() {
                 @Override
                 public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-                    return new SaveDataToDatabaseTask(getActivity(), currentWeatherList);
+                    if (id == SAVE_TO_DB_LOADER_ID) {
+                        // Last parameter is Update = true (we already have cityId column).
+                        return new SaveDataToDatabaseTask(getActivity(), currentWeatherList, citiesID, true);
+                    } else {
+                        // Last parameter is Update = false (rewrite whole database).
+                        return new SaveDataToDatabaseTask(getActivity(), currentWeatherList, citiesID, false);
+                    }
                 }
 
                 @Override
@@ -85,7 +96,7 @@ public class ListWeatherFragment extends Fragment
                 @Override
                 public void onLoadFinished(Loader<List<DetailedWeatherData>> loader, List<DetailedWeatherData> data) {
                     currentWeatherList.clear();
-                    if (data != null && data.get(0).getCity() != null) {
+                    if (data != null && data.size() != 0 && data.get(0).getCity() != null) {
                         loaderCondition.showRecyclerView();
                         currentWeatherList.addAll(data);
                         adapter.notifyDataSetChanged();
@@ -93,6 +104,8 @@ public class ListWeatherFragment extends Fragment
                         if (loader.getId() == LOAD_FROM_INTERNET_LOADER_ID) {
                             getLoaderManager().initLoader(SAVE_TO_DB_LOADER_ID, null, loaderToDB);
                         }
+                    } else if (data != null && data.size() == 0) {
+                        loaderCondition.showRecyclerView();
                     } else {
                         loaderCondition.showNoConnectionText();
                     }
@@ -204,37 +217,78 @@ public class ListWeatherFragment extends Fragment
                 startRefresh();
             }
         });
-        // Check network connection - if connect established - load from internet, otherwise from database
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-            getLoaderManager().initLoader(LOAD_FROM_INTERNET_LOADER_ID, null, loaderFromInternet);
-        } else {
-            getLoaderManager().initLoader(LOAD_FROM_DB_LOADER_ID, null, loaderFromInternet);
-        }
         return layout;
     }
+
+    // Call loader launching in onActivityCreated,
+    // otherwise app will crash inasmuch as it sets view in activity
+    // (through loaderCondition interface)
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        launchCityLoader();
+    }
+
     // TODO move moveRowsInTable to non UI thread and set try catch
     private void moveRowsInTable(int fromPosition, int toPosition) {
         DetailedWeatherData fromObject = currentWeatherList.get(fromPosition),
-                            toObject = currentWeatherList.get(fromPosition);
+                            toObject = currentWeatherList.get(toPosition);
         WeatherDatabase dbHelper = new WeatherDatabase(getActivity());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        //contentValues.put(CurrentWeatherEntry.CITY_ID, );
-        //db.update(CurrentWeatherEntry.TABLE_NAME, );
+        Cursor cursor = db.query(CurrentWeatherEntry.TABLE_NAME,
+                new String[] {CurrentWeatherEntry._ID},
+                CurrentWeatherEntry.CITY_ID +" = ? ",
+                new String[]{citiesID.get(fromPosition)}, null, null, null);
+        int indexId = cursor.getColumnIndex(CurrentWeatherEntry._ID);
+        int fromId = 0, toId = 0;
+        if (cursor.moveToNext()) {
+            fromId = cursor.getInt(indexId);
+        }
+        cursor = db.query(CurrentWeatherEntry.TABLE_NAME,
+                new String[] {CurrentWeatherEntry._ID},
+                CurrentWeatherEntry.CITY_ID +" = ?",
+                new String[]{citiesID.get(toPosition)}, null, null, null);
+        if (cursor.moveToNext()) {
+            toId = cursor.getInt(indexId);
+        }
+        updateThisRowWithThisObject(db, fromPosition, fromObject, toId);
+        updateThisRowWithThisObject(db, toPosition, toObject, fromId);
+        cursor.close();
         dbHelper.close();
         db.close();
+    }
+
+    private void updateThisRowWithThisObject(SQLiteDatabase db, int position, DetailedWeatherData object, int toPosition) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CurrentWeatherEntry.CITY_ID, citiesID.get(position));
+        contentValues.put(CurrentWeatherEntry.CITY_NAME, object.getCity());
+        contentValues.put(CurrentWeatherEntry.CURRENT_WEATHER, object.getCurrentWeather());
+        contentValues.put(CurrentWeatherEntry.TIME, object.getTime());
+        contentValues.put(CurrentWeatherEntry.TIME_ZONE, object.getTimeZone());
+        contentValues.put(CurrentWeatherEntry.HUMIDITY, object.getHumidity());
+        contentValues.put(CurrentWeatherEntry.WIND_SPEED, object.getWindSpeed());
+        contentValues.put(CurrentWeatherEntry.PRESSURE, object.getPressure());
+        contentValues.put(CurrentWeatherEntry.ICON_NUMBER, object.getIconNumber());
+        db.update(CurrentWeatherEntry.TABLE_NAME, contentValues,
+                CurrentWeatherEntry._ID+" = ?",
+                new String[] {Integer.toString(toPosition)});
     }
 
     // TODO move removeRowFromDB to non UI thread and set try catch
     private void removeRowFromDB(int position) {
         WeatherDatabase dbHelper = new WeatherDatabase(getActivity());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(CurrentWeatherEntry.TABLE_NAME, CurrentWeatherEntry._ID+" = ?",
-                                    new String[] {Integer.toString(position+1)});
+        SQLiteDatabase db = null;
+        try {
+            db = dbHelper.getWritableDatabase();
+            db.delete(CurrentWeatherEntry.TABLE_NAME, CurrentWeatherEntry.CITY_ID+" = ?",
+                                    new String[] {citiesID.get(position) });
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Problems with data persistence.", Toast.LENGTH_SHORT).show();
+        }
         dbHelper.close();
-        db.close();
+        if (db != null) {
+            db.close();
+        }
     }
 
     // TODO move loadCitiesIDFromDatabase to non UI thread and set try catch
@@ -259,15 +313,39 @@ public class ListWeatherFragment extends Fragment
         outState.putParcelableArrayList("values", (ArrayList<DetailedWeatherData>) currentWeatherList);
         outState.putStringArrayList("citiesID", (ArrayList<String>) citiesID);
     }
+    // onPause save database. We will rewrite the whole table,
+    // cause user could change order and amount of cities dramatically
+    @Override
+    public void onPause() {
+        super.onPause();
+        //getLoaderManager().initLoader(SAVE_TO_DB_DURING_PAUSE_LOADER_ID, null, loaderToDB);
+    }
 
     public void startRefresh() {
+        launchCityLoader();
+    }
+
+    private void launchCityLoader() {
+        // If we don't have any cities to load - just return without loader launch
+        if (citiesID == null || citiesID.size() == 0) {
+            loaderCondition.showRecyclerView();
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(), "Add city to display.", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
         // Check network connection - if connect established - load from internet, otherwise from database
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
             getLoaderManager().initLoader(LOAD_FROM_INTERNET_LOADER_ID, null, loaderFromInternet);
         } else {
-            getLoaderManager().initLoader(LOAD_FROM_DB_LOADER_ID, null, loaderFromInternet);
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
+            } else {
+                getLoaderManager().initLoader(LOAD_FROM_DB_LOADER_ID, null, loaderFromInternet);
+            }
         }
     }
 
