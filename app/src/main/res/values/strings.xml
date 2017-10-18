@@ -5,4 +5,5 @@
     <string name="humidity">Humidity: %d%%</string>
     <string name="wind">Wind speed: %d, meter/sec</string>
     <string name="emptyDataString">There is no data available. \nPlease, check your internet connection.</string>
+    <string name="new_city_extra">newCityExtra</string>
 </resources>

@@ -1,25 +1,21 @@
 package com.example.pavelsuvit.weatherapplication.fragments;
 
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
 import com.example.pavelsuvit.weatherapplication.R;
 import com.example.pavelsuvit.weatherapplication.activities.WeatherActivity;
+import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
 import com.example.pavelsuvit.weatherapplication.utils.WeatherDetailedLoader;
 
 import java.text.SimpleDateFormat;
@@ -35,7 +31,7 @@ import java.util.TimeZone;
  */
 public class DetailedFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<List<DetailedWeatherData>>,
-                    SeekBar.OnSeekBarChangeListener {
+        SeekBar.OnSeekBarChangeListener {
 
     private static final String URL_WEATHER = "http://api.openweathermap.org/data/2.5/forecast?id=";
     private static final String URL_PART_WITH_KEY = "&APPID=6b8bc04abc1a38d4dbcc15a8f833ff69";
@@ -58,8 +54,7 @@ public class DetailedFragment extends Fragment
         if (savedInstanceState != null) {
             weatherDataList = savedInstanceState.getParcelableArrayList("values");
             currentPosition = savedInstanceState.getInt("currentPosition");
-        }
-        else if (getActivity().getIntent().getExtras() != null) {
+        } else if (getActivity().getIntent().getExtras() != null) {
             String cityIdTmp = getActivity().getIntent().getExtras().getString(WeatherActivity.EXTRA_CITY_ID);
             DetailedWeatherData objectTmp = getActivity().getIntent().getExtras().getParcelable(WeatherActivity.EXTRA_CITY_OBJECT_ID);
             if (cityIdTmp != null && objectTmp != null) {
@@ -78,7 +73,7 @@ public class DetailedFragment extends Fragment
         fillViewWithObject(currentData, view);
         weatherPosition = (SeekBar) view.findViewById(R.id.weatherPosition);
         weatherPosition.setOnSeekBarChangeListener(this);
-        weatherPosition.setMax(weatherDataList.size()-1);
+        weatherPosition.setMax(weatherDataList.size() - 1);
         weatherPosition.setProgress(currentPosition);
         getLoaderManager().initLoader(0, null, this);
         return view;
@@ -104,7 +99,7 @@ public class DetailedFragment extends Fragment
             TextView cityText = (TextView) view.findViewById(R.id.cityText);
             cityText.setText(currentData.getCity());
             TextView timeText = (TextView) view.findViewById(R.id.timeText);
-            Date dateDisplay = new Date(currentData.getTime()*1000);
+            Date dateDisplay = new Date(currentData.getTime() * 1000);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy, h:mm a");
             if (TIME_ZONE != null) {
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
@@ -147,7 +142,7 @@ public class DetailedFragment extends Fragment
     public void onLoadFinished(Loader<List<DetailedWeatherData>> loader, List<DetailedWeatherData> data) {
         if (data != null) {
             weatherDataList.addAll(data);
-            weatherPosition.setMax(weatherDataList.size()-1);
+            weatherPosition.setMax(weatherDataList.size() - 1);
         }
         getLoaderManager().destroyLoader(0);
     }

@@ -11,9 +11,12 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.example.pavelsuvit.weatherapplication.R;
 import com.example.pavelsuvit.weatherapplication.dataPresenters.CitiesIdVirtualDatabase;
 import com.example.pavelsuvit.weatherapplication.utils.CityIdCursorWrapper;
 
@@ -42,20 +45,31 @@ public class AddCityActivity extends ListActivity
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null) {
-            //String respond = DatabaseUtils.dumpCursorToString(data);
             CityIdCursorWrapper resultCursor = new CityIdCursorWrapper(data);
-            //respond = DatabaseUtils.dumpCursorToString(resultCursor);
             CursorAdapter listAdapter = new SimpleCursorAdapter(this,
                     android.R.layout.simple_list_item_1, resultCursor,
                     new String[] {CitiesIdVirtualDatabase.CITY_NAME},
                     new int[]{android.R.id.text1}, 0);
             setListAdapter(listAdapter);
+
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Cursor mCursor =
+                ((CursorWrapper)getListView().getItemAtPosition(position)).getWrappedCursor();
+        mCursor.moveToFirst();
+        String cityId = mCursor.getString(mCursor.getColumnIndex(CitiesIdVirtualDatabase.CITY_ID));
+        Intent intent = new Intent(this, WeatherActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(getString(R.string.new_city_extra), cityId);
+        startActivity(intent);
     }
 
     // Private class for background search

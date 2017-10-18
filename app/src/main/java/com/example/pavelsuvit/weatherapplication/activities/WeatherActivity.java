@@ -5,23 +5,23 @@ import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 
+import com.example.pavelsuvit.weatherapplication.R;
 import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
 import com.example.pavelsuvit.weatherapplication.fragments.DetailedFragment;
 import com.example.pavelsuvit.weatherapplication.fragments.ListWeatherFragment;
-import com.example.pavelsuvit.weatherapplication.R;
 import com.example.pavelsuvit.weatherapplication.utils.LoadCitiesToDatabaseTask;
 
 
 public class WeatherActivity extends AppCompatActivity
         implements ListWeatherFragment.ItemDeletedFromList,
-                    ListWeatherFragment.ItemClickedListener,
-                    ListWeatherFragment.LoaderCondition,
-                    LoaderManager.LoaderCallbacks<Void>{
+        ListWeatherFragment.ItemClickedListener,
+        ListWeatherFragment.LoaderCondition,
+        LoaderManager.LoaderCallbacks<Void> {
 
     public static final String EXTRA_CITY_ID = "CityId";
     public static final String EXTRA_CITY_OBJECT_ID = "dataObject";
@@ -39,9 +39,15 @@ public class WeatherActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        String newCityExtra = getIntent().getStringExtra(getString(R.string.new_city_extra));
+        if (newCityExtra != null) {
+            ListWeatherFragment mWeatherFragment =
+                    (ListWeatherFragment) getFragmentManager().findFragmentById(R.id.list_fragment_view);
+            mWeatherFragment.addCity(newCityExtra);
+        }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(floatingBtnListener);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
     @Override

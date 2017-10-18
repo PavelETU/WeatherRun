@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.example.pavelsuvit.weatherapplication.R;
 
 public class DetailedWeatherData implements Parcelable {
+    private String cityId;
     private String iconNumber;
     private int currentWeather;
     private String city;
@@ -26,6 +27,7 @@ public class DetailedWeatherData implements Parcelable {
         this.humidity = humidity;
         this.windSpeed = windSpeed;
     }
+
     public DetailedWeatherData(String city, int currentWeather,
                                String iconNumber, long time, String timeZone, int pressure,
                                int humidity, int windSpeed) {
@@ -69,6 +71,10 @@ public class DetailedWeatherData implements Parcelable {
 
     public String getTimeZone() {
         return timeZone;
+    }
+
+    public String getCityId() {
+        return cityId;
     }
 
     public int getIconDrawable() {
@@ -124,6 +130,7 @@ public class DetailedWeatherData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(getCityId());
         dest.writeString(getCity());
         dest.writeLong(getTime());
         dest.writeString(getTimeZone());
@@ -148,6 +155,7 @@ public class DetailedWeatherData implements Parcelable {
             };
 
     private DetailedWeatherData(Parcel s) {
+        this.cityId = s.readString();
         this.city = s.readString();
         this.time = s.readLong();
         this.timeZone = s.readString();

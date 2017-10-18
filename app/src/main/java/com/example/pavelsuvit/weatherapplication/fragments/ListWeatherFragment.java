@@ -2,6 +2,7 @@ package com.example.pavelsuvit.weatherapplication.fragments;
 
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,31 +12,27 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
 import com.example.pavelsuvit.weatherapplication.R;
+import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
 import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherDatabase;
 import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherDatabaseContract.CurrentWeatherEntry;
+import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherRecyclerAdapter;
 import com.example.pavelsuvit.weatherapplication.utils.LoadDataFromDatabaseTask;
 import com.example.pavelsuvit.weatherapplication.utils.SaveDataToDatabaseTask;
 import com.example.pavelsuvit.weatherapplication.utils.WeatherLoader;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
@@ -83,7 +80,7 @@ public class ListWeatherFragment extends Fragment
             };
 
     private LoaderManager.LoaderCallbacks<List<DetailedWeatherData>> loaderFromInternet =
-            new LoaderManager.LoaderCallbacks<List<DetailedWeatherData>> () {
+            new LoaderManager.LoaderCallbacks<List<DetailedWeatherData>>() {
                 @Override
                 public Loader<List<DetailedWeatherData>> onCreateLoader(int id, Bundle args) {
                     if (id == LOAD_FROM_INTERNET_LOADER_ID) {
@@ -122,6 +119,12 @@ public class ListWeatherFragment extends Fragment
                     adapter.notifyDataSetChanged();
                 }
             };
+
+    public void addCity(String cityId) {
+        citiesID.add(cityId);
+        launchCityLoader();
+    }
+
     @Override
     public void itemClicked(View view, int position) {
         if (eventItemClicked != null) {
@@ -146,6 +149,7 @@ public class ListWeatherFragment extends Fragment
     // Through this interface hiding of ProgressBar happens
     public interface LoaderCondition {
         void showRecyclerView();
+
         void showNoConnectionText();
     }
 
@@ -208,7 +212,7 @@ public class ListWeatherFragment extends Fragment
                         adapter.notifyItemRemoved(position);
                         eventItemDeleted.itemRemovedFromList();
                     }
-        });
+                });
         mIth.attachToRecyclerView(cities);
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipeLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -232,12 +236,12 @@ public class ListWeatherFragment extends Fragment
     // TODO move moveRowsInTable to non UI thread and set try catch
     private void moveRowsInTable(int fromPosition, int toPosition) {
         DetailedWeatherData fromObject = currentWeatherList.get(fromPosition),
-                            toObject = currentWeatherList.get(toPosition);
+                toObject = currentWeatherList.get(toPosition);
         WeatherDatabase dbHelper = new WeatherDatabase(getActivity());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor cursor = db.query(CurrentWeatherEntry.TABLE_NAME,
-                new String[] {CurrentWeatherEntry._ID},
-                CurrentWeatherEntry.CITY_ID +" = ? ",
+                new String[]{CurrentWeatherEntry._ID},
+                CurrentWeatherEntry.CITY_ID + " = ? ",
                 new String[]{citiesID.get(fromPosition)}, null, null, null);
         int indexId = cursor.getColumnIndex(CurrentWeatherEntry._ID);
         int fromId = 0, toId = 0;
@@ -245,8 +249,8 @@ public class ListWeatherFragment extends Fragment
             fromId = cursor.getInt(indexId);
         }
         cursor = db.query(CurrentWeatherEntry.TABLE_NAME,
-                new String[] {CurrentWeatherEntry._ID},
-                CurrentWeatherEntry.CITY_ID +" = ?",
+                new String[]{CurrentWeatherEntry._ID},
+                CurrentWeatherEntry.CITY_ID + " = ?",
                 new String[]{citiesID.get(toPosition)}, null, null, null);
         if (cursor.moveToNext()) {
             toId = cursor.getInt(indexId);
@@ -270,8 +274,8 @@ public class ListWeatherFragment extends Fragment
         contentValues.put(CurrentWeatherEntry.PRESSURE, object.getPressure());
         contentValues.put(CurrentWeatherEntry.ICON_NUMBER, object.getIconNumber());
         db.update(CurrentWeatherEntry.TABLE_NAME, contentValues,
-                CurrentWeatherEntry._ID+" = ?",
-                new String[] {Integer.toString(toPosition)});
+                CurrentWeatherEntry._ID + " = ?",
+                new String[]{Integer.toString(toPosition)});
     }
 
     // TODO move removeRowFromDB to non UI thread and set try catch
@@ -280,8 +284,8 @@ public class ListWeatherFragment extends Fragment
         SQLiteDatabase db = null;
         try {
             db = dbHelper.getWritableDatabase();
-            db.delete(CurrentWeatherEntry.TABLE_NAME, CurrentWeatherEntry.CITY_ID+" = ?",
-                                    new String[] {citiesID.get(position) });
+            db.delete(CurrentWeatherEntry.TABLE_NAME, CurrentWeatherEntry.CITY_ID + " = ?",
+                    new String[]{citiesID.get(position)});
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Problems with data persistence.", Toast.LENGTH_SHORT).show();
         }
@@ -296,7 +300,7 @@ public class ListWeatherFragment extends Fragment
         WeatherDatabase dbHelper = new WeatherDatabase(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(CurrentWeatherEntry.TABLE_NAME,
-                new String[] {CurrentWeatherEntry.CITY_ID}, null, null, null, null, null);
+                new String[]{CurrentWeatherEntry.CITY_ID}, null, null, null, null, null);
         int cityIdIndex = cursor.getColumnIndex(CurrentWeatherEntry.CITY_ID);
         List<String> result = new ArrayList<>();
         while (cursor.moveToNext()) {
@@ -313,6 +317,7 @@ public class ListWeatherFragment extends Fragment
         outState.putParcelableArrayList("values", (ArrayList<DetailedWeatherData>) currentWeatherList);
         outState.putStringArrayList("citiesID", (ArrayList<String>) citiesID);
     }
+
     // onPause save database. We will rewrite the whole table,
     // cause user could change order and amount of cities dramatically
     @Override
@@ -349,14 +354,13 @@ public class ListWeatherFragment extends Fragment
         }
     }
 
-
     public String combineURL() {
         StringBuilder sb = new StringBuilder();
         sb.append(URL_WEATHER);
-        for (int i = 0; i < citiesID.size()-1; i++) {
+        for (int i = 0; i < citiesID.size() - 1; i++) {
             sb.append(citiesID.get(i)).append(",");
         }
-        sb.append(citiesID.get(citiesID.size()-1));
+        sb.append(citiesID.get(citiesID.size() - 1));
         sb.append(URL_PART_WITH_KEY);
         return sb.toString();
     }
