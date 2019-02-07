@@ -1,6 +1,6 @@
 package com.example.pavelsuvit.weatherapplication.activities;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.pavelsuvit.weatherapplication.R;
