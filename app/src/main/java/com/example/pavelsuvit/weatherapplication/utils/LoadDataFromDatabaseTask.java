@@ -6,9 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherDatabase;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherDatabaseContract.CurrentWeatherEntry;
+import com.example.pavelsuvit.weatherapplication.data_presenters.DetailedWeatherData;
+import com.example.pavelsuvit.weatherapplication.data_presenters.WeatherDatabase;
+import com.example.pavelsuvit.weatherapplication.data_presenters.WeatherDatabaseContract.CurrentWeatherEntry;
 
 import java.util.ArrayList;
 import java.util.List;

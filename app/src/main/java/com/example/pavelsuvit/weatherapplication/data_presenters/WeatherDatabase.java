@@ -1,11 +1,11 @@
-package com.example.pavelsuvit.weatherapplication.dataPresenters;
+package com.example.pavelsuvit.weatherapplication.data_presenters;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherDatabaseContract.*;
+import com.example.pavelsuvit.weatherapplication.data_presenters.WeatherDatabaseContract.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

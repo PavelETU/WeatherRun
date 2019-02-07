@@ -4,8 +4,7 @@ package com.example.pavelsuvit.weatherapplication.utils;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
-import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
-import com.example.pavelsuvit.weatherapplication.utils.JSONHelper;
+import com.example.pavelsuvit.weatherapplication.data_presenters.DetailedWeatherData;
 
 import java.util.List;
 

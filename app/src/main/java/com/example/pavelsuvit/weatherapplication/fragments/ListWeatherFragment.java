@@ -23,10 +23,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.pavelsuvit.weatherapplication.R;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherDatabase;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherDatabaseContract.CurrentWeatherEntry;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.WeatherRecyclerAdapter;
+import com.example.pavelsuvit.weatherapplication.data_presenters.DetailedWeatherData;
+import com.example.pavelsuvit.weatherapplication.data_presenters.WeatherDatabase;
+import com.example.pavelsuvit.weatherapplication.data_presenters.WeatherDatabaseContract.CurrentWeatherEntry;
+import com.example.pavelsuvit.weatherapplication.data_presenters.WeatherRecyclerAdapter;
 import com.example.pavelsuvit.weatherapplication.utils.LoadDataFromDatabaseTask;
 import com.example.pavelsuvit.weatherapplication.utils.SaveDataToDatabaseTask;
 import com.example.pavelsuvit.weatherapplication.utils.WeatherLoader;

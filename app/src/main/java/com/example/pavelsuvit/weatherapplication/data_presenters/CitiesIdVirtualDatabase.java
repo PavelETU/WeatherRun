@@ -1,4 +1,4 @@
-package com.example.pavelsuvit.weatherapplication.dataPresenters;
+package com.example.pavelsuvit.weatherapplication.data_presenters;
 
 
 import android.content.Context;

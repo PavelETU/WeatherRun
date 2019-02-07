@@ -3,15 +3,9 @@ package com.example.pavelsuvit.weatherapplication.utils;
 import android.content.AsyncTaskLoader;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.util.Log;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.CitiesIdVirtualDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.example.pavelsuvit.weatherapplication.data_presenters.CitiesIdVirtualDatabase;
 
 import java.io.BufferedReader;
 import java.io.IOException;

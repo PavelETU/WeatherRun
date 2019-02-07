@@ -2,7 +2,7 @@ package com.example.pavelsuvit.weatherapplication.utils;
 
 import android.text.TextUtils;
 
-import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
+import com.example.pavelsuvit.weatherapplication.data_presenters.DetailedWeatherData;
 
 import org.json.JSONArray;
 import org.json.JSONException;

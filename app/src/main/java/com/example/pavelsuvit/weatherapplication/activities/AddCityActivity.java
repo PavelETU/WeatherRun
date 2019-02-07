@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CursorAdapter;
@@ -17,7 +16,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.pavelsuvit.weatherapplication.R;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.CitiesIdVirtualDatabase;
+import com.example.pavelsuvit.weatherapplication.data_presenters.CitiesIdVirtualDatabase;
 import com.example.pavelsuvit.weatherapplication.utils.CityIdCursorWrapper;
 
 public class AddCityActivity extends ListActivity

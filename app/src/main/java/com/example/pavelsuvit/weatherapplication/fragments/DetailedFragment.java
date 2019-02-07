@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.pavelsuvit.weatherapplication.R;
 import com.example.pavelsuvit.weatherapplication.activities.WeatherActivity;
-import com.example.pavelsuvit.weatherapplication.dataPresenters.DetailedWeatherData;
+import com.example.pavelsuvit.weatherapplication.data_presenters.DetailedWeatherData;
 import com.example.pavelsuvit.weatherapplication.utils.WeatherDetailedLoader;
 
 import java.text.SimpleDateFormat;
