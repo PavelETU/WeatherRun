@@ -3,6 +3,7 @@ package com.example.pavelsuvit.weatherapplication.utils;
 import android.content.AsyncTaskLoader;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.example.pavelsuvit.weatherapplication.data_presenters.CitiesIdVirtualDatabase;
@@ -14,11 +15,13 @@ import java.io.InputStreamReader;
 
 public class LoadCitiesToDatabaseTask extends AsyncTaskLoader<Void> {
 
-    private Context context;
+    private CitiesIdVirtualDatabase db;
+    private AssetManager assets;
 
     public LoadCitiesToDatabaseTask(Context context) {
         super(context);
-        this.context = context;
+        db = new CitiesIdVirtualDatabase(context);
+        assets = context.getAssets();
     }
 
     @Override
@@ -63,7 +66,7 @@ public class LoadCitiesToDatabaseTask extends AsyncTaskLoader<Void> {
         StringBuilder result = new StringBuilder();
         InputStream fileStream = null;
         try {
-            fileStream = context.getAssets().open("city_list.txt");
+            fileStream = assets.open("city_list.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fileStream, "UTF-8"), 8);
             String line = null;
             myDB.beginTransaction();

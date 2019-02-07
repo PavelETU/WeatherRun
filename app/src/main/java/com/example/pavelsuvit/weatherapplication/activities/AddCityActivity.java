@@ -19,15 +19,12 @@ import com.example.pavelsuvit.weatherapplication.R;
 import com.example.pavelsuvit.weatherapplication.data_presenters.CitiesIdVirtualDatabase;
 import com.example.pavelsuvit.weatherapplication.utils.CityIdCursorWrapper;
 
-public class AddCityActivity extends ListActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
-
+public class AddCityActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Get search query
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -38,7 +35,7 @@ public class AddCityActivity extends ListActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new SearchTask(this, query);
+        return new SearchTask(getApplicationContext(), query);
     }
 
     @Override
@@ -74,19 +71,17 @@ public class AddCityActivity extends ListActivity
     // Private class for background search
     private static class SearchTask extends AsyncTaskLoader<Cursor> {
 
-        Context context;
-
+        private CitiesIdVirtualDatabase db;
         private String searchQuery;
 
-        public SearchTask(Context context, String query) {
+        SearchTask(Context context, String query) {
             super(context);
-            this.context = context;
+            db = new CitiesIdVirtualDatabase(context);
             searchQuery = query;
         }
 
         @Override
         public Cursor loadInBackground() {
-            CitiesIdVirtualDatabase db = new CitiesIdVirtualDatabase(context);
             return db.searchQuery(searchQuery, new String[]{"rowid", CitiesIdVirtualDatabase.CITY_ID,
                     CitiesIdVirtualDatabase.CITY_NAME,
                     CitiesIdVirtualDatabase.COORD_LAT, CitiesIdVirtualDatabase.COORD_LON});

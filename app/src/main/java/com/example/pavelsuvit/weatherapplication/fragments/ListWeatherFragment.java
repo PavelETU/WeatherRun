@@ -12,11 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +29,12 @@ import com.example.pavelsuvit.weatherapplication.utils.WeatherLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ListWeatherFragment extends Fragment
         implements WeatherRecyclerAdapter.WeatherListListener {
 
@@ -68,7 +65,9 @@ public class ListWeatherFragment extends Fragment
                 @Override
                 public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
                     if (!data) {
-                        Toast.makeText(getActivity(), "Cannot save data to database. For proper offline mode reinstall app.", Toast.LENGTH_SHORT).show();
+                        if (getView() != null) {
+                            Toast.makeText(getActivity(), "Cannot save data to database. For proper offline mode reinstall app.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                     getLoaderManager().destroyLoader(SAVE_TO_DB_LOADER_ID);
                 }
@@ -287,7 +286,9 @@ public class ListWeatherFragment extends Fragment
             db.delete(CurrentWeatherEntry.TABLE_NAME, CurrentWeatherEntry.CITY_ID + " = ?",
                     new String[]{citiesID.get(position)});
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "Problems with data persistence.", Toast.LENGTH_SHORT).show();
+            if (getView() != null) {
+                Toast.makeText(getActivity(), "Problems with data persistence.", Toast.LENGTH_SHORT).show();
+            }
         }
         dbHelper.close();
         if (db != null) {
@@ -336,7 +337,9 @@ public class ListWeatherFragment extends Fragment
             loaderCondition.showRecyclerView();
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);
-                Toast.makeText(getActivity(), "Add city to display.", Toast.LENGTH_SHORT).show();
+                if (getView() != null) {
+                    Toast.makeText(getActivity(), "Add city to display.", Toast.LENGTH_SHORT).show();
+                }
             }
             return;
         }

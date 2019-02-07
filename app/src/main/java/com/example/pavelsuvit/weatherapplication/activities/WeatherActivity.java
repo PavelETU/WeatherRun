@@ -90,7 +90,7 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public Loader<Void> onCreateLoader(int id, Bundle args) {
-        return new LoadCitiesToDatabaseTask(this);
+        return new LoadCitiesToDatabaseTask(getApplicationContext());
     }
 
     @Override
