@@ -126,7 +126,7 @@ public class ListWeatherFragment extends Fragment
     }
 
     @Override
-    public void itemClicked(View view, int position) {
+    public void itemClicked(int position) {
         if (eventItemClicked != null) {
             eventItemClicked.itemFromListClicked(citiesID.get(position), currentWeatherList.get(position));
         }
@@ -185,7 +185,7 @@ public class ListWeatherFragment extends Fragment
         } else {
             citiesID = loadCitiesIDFromDatabase(getActivity());
         }
-        adapter = new WeatherRecyclerAdapter(getActivity(), currentWeatherList, this);
+        adapter = new WeatherRecyclerAdapter(currentWeatherList, this);
         cities.setAdapter(adapter);
         cities.setLayoutManager(new LinearLayoutManager(getActivity()));
         ItemTouchHelper mIth = new ItemTouchHelper

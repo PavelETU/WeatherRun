@@ -1,7 +1,6 @@
 package com.example.pavelsuvit.weatherapplication.data_presenters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,25 +15,35 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecyclerAdapter.ViewHolder> {
+    private List<DetailedWeatherData> weatherList;
+    private WeatherListListener listener;
 
-    @Override
-    public WeatherRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View endView = inflater.inflate(R.layout.row_with_city, parent, false);
-        ViewHolder viewHolder = new ViewHolder(endView);
-        return viewHolder;
+    public WeatherRecyclerAdapter(List<DetailedWeatherData> list, WeatherListListener listener) {
+        this.weatherList = list;
+        this.listener = listener;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    @NonNull
+    public WeatherRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View endView = inflater.inflate(R.layout.row_with_city, parent, false);
+        return new ViewHolder(endView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final DetailedWeatherData weatherData = weatherList.get(position);
         holder.cityText.setText(weatherData.getCity());
         holder.currentWeather.setText(String.format(Locale.US, "%d\u00b0", weatherData.getCurrentWeather()));
         holder.weatherIcon.setImageResource(weatherData.getIconDrawable());
-        Date dateDisplay = new Date(weatherData.getTime()*1000);
+        Date dateDisplay = new Date(weatherData.getTime() * 1000);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy");
         if (weatherData.getTimeZone() != null) {
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone(weatherData.getTimeZone()));
@@ -42,6 +51,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
         holder.weatherDate.setText(simpleDateFormat.format(dateDisplay));
         simpleDateFormat.applyPattern("h:mm a");
         holder.weatherTime.setText(simpleDateFormat.format(dateDisplay));
+        holder.itemView.setOnClickListener(v -> listener.itemClicked(holder.getAdapterPosition()));
     }
 
     @Override
@@ -49,46 +59,27 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
         return weatherList.size();
     }
 
-    private static WeatherListListener listener;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView cityText;
+        TextView currentWeather;
+        ImageView weatherIcon;
+        TextView weatherDate;
+        TextView weatherTime;
+        View mView;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            cityText = itemView.findViewById(R.id.cityText);
+            currentWeather = itemView.findViewById(R.id.currentWeather);
+            weatherIcon = itemView.findViewById(R.id.weatherIcon);
+            weatherDate = itemView.findViewById(R.id.weatherDate);
+            weatherTime = itemView.findViewById(R.id.weatherTime);
+            mView = itemView;
+        }
+    }
 
     public interface WeatherListListener {
-        void itemClicked(View view, int position);
+        void itemClicked(int position);
     }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView cityText;
-        public TextView currentWeather;
-        public ImageView weatherIcon;
-        public TextView weatherDate;
-        public TextView weatherTime;
-        public View mView;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            cityText = (TextView) itemView.findViewById(R.id.cityText);
-            currentWeather = (TextView) itemView.findViewById(R.id.currentWeather);
-            weatherIcon = (ImageView) itemView.findViewById(R.id.weatherIcon);
-            weatherDate = (TextView) itemView.findViewById(R.id.weatherDate);
-            weatherTime = (TextView) itemView.findViewById(R.id.weatherTime);
-            mView = itemView;
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            listener.itemClicked(v, getLayoutPosition());
-        }
-    }
-    private List<DetailedWeatherData> weatherList;
-    private Context context;
-
-    public WeatherRecyclerAdapter(Context context, List<DetailedWeatherData> list, WeatherListListener listener) {
-        this.weatherList = list;
-        this.context = context;
-        this.listener = listener;
-    }
-    private Context getContext() {
-        return context;
-    }
-
 
 }
