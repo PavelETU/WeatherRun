@@ -6,8 +6,6 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.pavelsuvit.weatherapplication.R;
@@ -15,6 +13,9 @@ import com.example.pavelsuvit.weatherapplication.data_presenters.DetailedWeather
 import com.example.pavelsuvit.weatherapplication.fragments.DetailedFragment;
 import com.example.pavelsuvit.weatherapplication.fragments.ListWeatherFragment;
 import com.example.pavelsuvit.weatherapplication.utils.LoadCitiesToDatabaseTask;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class WeatherActivity extends AppCompatActivity
@@ -39,20 +40,21 @@ public class WeatherActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        String newCityExtra = getIntent().getStringExtra(getString(R.string.new_city_extra));
+        String newCityExtra = getIntent().getStringExtra(AddCityActivity.NEW_CITY_EXTRA_KEY);
         if (newCityExtra != null) {
             ListWeatherFragment mWeatherFragment =
                     (ListWeatherFragment) getFragmentManager().findFragmentById(R.id.list_fragment_view);
             mWeatherFragment.addCity(newCityExtra);
+            getIntent().removeExtra(AddCityActivity.NEW_CITY_EXTRA_KEY);
         }
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(floatingBtnListener);
         getLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
     @Override
     public void itemRemovedFromList() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         if (!fab.isShown()) {
             fab.show();
         }

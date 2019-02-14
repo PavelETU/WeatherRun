@@ -21,6 +21,7 @@ import com.example.pavelsuvit.weatherapplication.utils.CityIdCursorWrapper;
 
 public class AddCityActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private String query;
+    public static String NEW_CITY_EXTRA_KEY = "newCityExtra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class AddCityActivity extends ListActivity implements LoaderManager.Loade
         String cityId = mCursor.getString(mCursor.getColumnIndex(CitiesIdVirtualDatabase.CITY_ID));
         Intent intent = new Intent(this, WeatherActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(getString(R.string.new_city_extra), cityId);
+        intent.putExtra(NEW_CITY_EXTRA_KEY, cityId);
         startActivity(intent);
     }
 
